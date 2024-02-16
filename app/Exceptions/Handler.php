@@ -27,4 +27,15 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    public function render($request, $exception)
+    {
+        if ($exception instanceof Tymon\JWTAuth\Exception\TokenExpiredException)
+            return response()->json(['token_expired'], $e->getStatusCode());
+        
+        if ($exception instanceof Tymon\JWTAuth\Exception\TokenInvalidException)
+            return response()->json(['token_invalid'], $e->getStatusCode());
+
+        return parent::render($request, $exception);
+    }
 }
