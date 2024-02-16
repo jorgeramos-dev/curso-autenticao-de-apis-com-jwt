@@ -115,4 +115,19 @@ class AuthController extends Controller
 
         return response()->json(compact('user'));
     }
+
+    public function refreshToken()
+    {
+        if (!$token = JWTAuth::getToken()) {
+            return response->json(['error', 'token_not_send'], 401);
+        }
+
+        try {
+            $token = JWTAuth::refresh();
+        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            return response()->json(['token_invalid'], $e->gerStatusCode());
+        }
+
+        return response()->json(compact('token'));
+    }
 }

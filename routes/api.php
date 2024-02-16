@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\v1\ProductController;
 
 $this->group(['prefix' => 'v1', 'namespace' => 'Api\v1'], function (){
     $this->post('auth', AuthController::class);
+    $this->post('auth-refresh', AuthController::refreshToken);
     $this->get('me', AuthController::getAuthenticatedUser);
 
     $this->apiResource('categories', CategoryController::class);
