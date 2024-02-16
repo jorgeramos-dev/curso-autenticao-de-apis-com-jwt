@@ -2,6 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controlers\AuthController;
+use App\Http\Controllers\Api\v1\CategoryController;
+use App\Http\Controllers\Api\v1\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +17,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+$this->group(['prefix' => 'v1', 'namespace' => 'Api\v1'], function (){
+    $this->post('auth', AuthController::class);
+
+    $this->apiResource('categories', CategoryController::class);
+    $this->apiResource('products', ProductController::class);
 });
