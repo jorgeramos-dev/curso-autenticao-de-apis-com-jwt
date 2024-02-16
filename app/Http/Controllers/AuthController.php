@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {
@@ -86,13 +86,33 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
         try {
-            if (! $token = JWTAuth::attempt($credentials)) {
+            if (!$token = JWTAuth::attempt($credentials)) {
                 return response()->json(['error' => 'invalid_credentials'], 401);
             }
         } catch (\Throwable $e) {
-            return response()->json(['error'=>'could_noit_create_token'], 500);
+            return response()->json(['error' => 'could_noit_create_token'], 500);
         }
 
-        return response()->json(compact('token'));
+        // Get user autenticator
+        $user = auth()->user();
+
+        return response()->json(compact('token', 'user'));
+    }
+
+    public function getAuthenticatedUser()
+    {
+        try {
+            if (!$user = JWTAuth::ParceToken()->authenticate()) {
+                return response()->json(['user_not_found', 404]);
+            }
+        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            return response()->json(['token_expired'], $e->gerStatusCode());
+        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            return response()->json(['token_invalid'], $e->gerStatusCode());
+        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            return response()->json(['token_absent'], $e->gerStatusCode());
+        }
+
+        return response()->json(compact('user'));
     }
 }
