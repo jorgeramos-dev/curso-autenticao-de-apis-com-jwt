@@ -44,7 +44,6 @@ class ProductController extends Controller
             if (!$upload) {
                 return response()->json(['error' => 'Fail Upload'], 500);
             }
-
         }
         $product = $this->product->create();
         return response()->json($product, 201);
@@ -92,7 +91,6 @@ class ProductController extends Controller
             }
 
         }
-
         $product->update();
         return response()->json($product);
     }
